@@ -1,82 +1,65 @@
-private void btnAdd_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            var student = new Student
-            {
-                Name = txtName.Text,
-                Age = int.Parse(txtAge.Text)
-            };
-            controller.add(student);
-            loadData();
-            ClearFields();
+using System.Drawing.Text;
+using TestWins.Controller;
 
-            MessageBox.Show("Student added successfully!");
-        }
-        catch(Exception e)
+namespace TestWins;
+
+public partial class Form1 : Form
+{
+    //business
+
+    private readonly StudentController controller = new StudentController();
+    public Form1()
+    {
+        InitializeComponent();
+        loadData();
+    }
+
+    private void loadData()
+    {
+        dataGridView1.DataSource = controller.getAll();
+    }
+
+    private void btnAdd_Click(object sender, EventArgs e)
+    {
+        Students s = new Students()
         {
-            MessageBox.Show("Error: " + ex.Message);
-        }
+            Name = txtName.Text,
+            Age = int.Parse(txtAge.Text),
+            Course = txtCourse.Text
+        };
+        controller.insert(s);
+        loadData();
     }
 
     private void btnUpdate_Click(object sender, EventArgs e)
     {
-        try
+        Students S = new Students()
         {
-            var student = new Student
-            {
-                id = int.Parse(txtId.Text),
-                Name = txtName.Text,
-                Age = int.Parse(txtAge.Text)
-            };
-            controller.update(student);
-            loadData();
-            ClearFields();
-
-            MessageBox.Show("Student updated successfully!");
-        }
-        catch(Exception e)
-        {
-            MessageBox.Show("Erro: " + ex.Message);
-        }
+            Id = int.Parse(txtId.Text),
+            Name = txtName.Text,
+            Age = int.Parse(txtAge.Text),
+            Course = txtCourse.Text
+        };
+        controller.update(S);
+        loadData(); 
     }
 
     private void btnDelete_Click(object sender, EventArgs e)
     {
-        try
-        {
-            int id = int.Parse(txtId.Text);
-
-            var confirm = MessageBox.Show(
-            "Are you sure you want to delete this student?",
-            "Confirm Delete",
-            MessageBoxButtons.YesNo
-            );
-
-            if(confirm == DialogResult.Yes)
-            {
-                controller.delete(id);
-                loadData();
-                ClearFields();
-
-                MessageBox.Show("Student deleted successfully!");
-            }
-        }
-        catch(Exception e)
-        {
-            MessageBox.Show("Error: " + ex.Message);
-        }
+       int id = int.Parse(txtId.Text);
+        controller.delete(id);
+        loadData();
     }
 
     private void dataGridView1_CellClick(object sender, EventArgs e)
     {
-        if(e.RowIndex >= 0)
+        if (e.RowIndex >= 0)
         {
             DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-
             txtId.Text = row.Cells["Id"].Value.ToString();
             txtName.Text = row.Cells["Name"].Value.ToString();
             txtAge.Text = row.Cells["Age"].Value.ToString();
+            txtCourse.Text = row.Cells["Course"].Value.ToString();s
         }
     }
 }
